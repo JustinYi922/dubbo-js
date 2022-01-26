@@ -38,7 +38,7 @@ export async function extra(extraParam: IDubboExtInfo): Promise<IExtraResult> {
     //   '--lib=' + extraParam.libDirPath,
     //   '--provider-suffix=' + extraParam.providerSuffix || 'Provider'
     // ])
-    let execCmd = exec(`java -jar /Users/zhengyi/Downloads/projects/github/jexpose/target/jexpose-1.5.jar --entry=${extraParam.entry} --entry-jar=${extraParam.entryJarPath} --lib=${extraParam.libDirPath} --provider-suffix=${extraParam.providerSuffix || 'Provider'}`);
+    let execCmd = exec(`java -jar /Users/zhengyi/Desktop/jexpose-1.4.jar --entry=${extraParam.entry} --entry-jar=${extraParam.entryJarPath} --lib=${extraParam.libDirPath} --provider-suffix=${extraParam.providerSuffix || 'Provider'}`);
 
     let err: string = ''
     let jarDir: string = ''
