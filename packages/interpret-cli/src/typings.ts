@@ -89,6 +89,7 @@ export interface ITypePropers {
   isArray?: boolean
   elementType?: ITypePropers
   name?: typePath
+  annotation?: string //属性注释
   typeArgs?: ITypeArg[]
 }
 

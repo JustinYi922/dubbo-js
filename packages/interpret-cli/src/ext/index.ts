@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { spawn } from 'child_process'
+import { exec, spawn } from 'child_process'
 import { pathExists } from 'fs-extra'
 import { join } from 'path'
 import { IDubboExtInfo, IExtraResult } from '../typings'
@@ -30,14 +30,15 @@ const startFlag = 'Output at:'
 export async function extra(extraParam: IDubboExtInfo): Promise<IExtraResult> {
   await checkConfigPath([extraParam.entryJarPath, extraParam.libDirPath])
   return new Promise<IExtraResult>(async (resolve, reject) => {
-    let execCmd = spawn(`java`, [
-      '-jar',
-      require.resolve('jexpose/jexpose-1.3.jar'),
-      extraParam.entry,
-      extraParam.entryJarPath,
-      extraParam.libDirPath,
-      extraParam.providerSuffix || 'Provider'
-    ])
+    // let execCmd = spawn(`java`, [
+    //   '-jar',
+    //   '/Users/zhengyi/Downloads/projects/github/jexpose/target/jexpose-1.5.jar',
+    //   '--entry=' + extraParam.entry,
+    //   '--entry-jar=' + extraParam.entryJarPath,
+    //   '--lib=' + extraParam.libDirPath,
+    //   '--provider-suffix=' + extraParam.providerSuffix || 'Provider'
+    // ])
+    let execCmd = exec(`java -jar /Users/zhengyi/Downloads/projects/github/jexpose/target/jexpose-1.5.jar --entry=${extraParam.entry} --entry-jar=${extraParam.entryJarPath} --lib=${extraParam.libDirPath} --provider-suffix=${extraParam.providerSuffix || 'Provider'}`);
 
     let err: string = ''
     let jarDir: string = ''
@@ -45,16 +46,23 @@ export async function extra(extraParam: IDubboExtInfo): Promise<IExtraResult> {
     execCmd.stderr.setEncoding('utf8')
     execCmd.stdout.on('data', (rowData: Buffer) => {
       let output = rowData.toString('utf8')
+      console.log('output:', output)
+
       if (output.includes(startFlag)) {
-        jarDir = output.match(/Output at :(.*)(\nelapsed.*?s)?/)[1]
+        jarDir = output.match(/Output at:(.*)(\nelapsed.*?s)?/)[1]
+        console.log('jarDir,', jarDir)
       }
     })
 
     execCmd.stderr.on('data', (rowData: Buffer) => {
       err += rowData.toString('utf8')
+      console.log('execCmd:', err)
     })
 
-    execCmd.on('close', (code) => {
+    execCmd.on('close', code => {
+      if (jarDir) {
+        jarDir = jarDir.trimLeft()
+      }
       if (jarDir) {
         resolve({
           jarInfo: join(jarDir, '/output/deflated.json'),
