@@ -55,8 +55,9 @@ export async function extra(extraParam: IDubboExtInfo): Promise<IExtraResult> {
       err += rowData.toString('utf8')
     })
 
-    execCmd.on('close', (code) => {
+    execCmd.on('close', code => {
       if (jarDir) {
+        jarDir = jarDir.trimLeft()
         resolve({
           jarInfo: join(jarDir, '/output/deflated.json'),
           jarDir

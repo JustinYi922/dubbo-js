@@ -100,7 +100,16 @@ export type typePath = string
 /**
  * java字段属性;
  */
-export interface IJFieldPropers extends ITypePropers {}
+export interface IJFieldPropers extends ITypePropers {
+  /**
+   * @ApiModelProperty的注解内容-value
+   */
+  annotation?: string
+  /**
+   *@ApiModelProperty的注解内容-required
+   */
+  required?: boolean
+}
 
 /**
  *

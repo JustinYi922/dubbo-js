@@ -36,9 +36,23 @@ export async function toField(
   log('转换 %s 为属性:%o', fieldName, fieldProps)
 
   let type = await jType2Ts(fieldProps, intepretHandle)
+  let docs = []
+  if (fieldProps.annotation) {
+    docs = [
+      {
+        description: fieldProps.annotation
+      }
+    ]
+  }
+
+  let hasQuestionToken = true
+  if (fieldProps.required != null && fieldProps.required == true) {
+    hasQuestionToken = false
+  }
   return {
     name: fieldName,
-    hasQuestionToken: true,
-    type
+    hasQuestionToken,
+    type,
+    docs
   }
 }
